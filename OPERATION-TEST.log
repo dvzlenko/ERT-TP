@@ -1,0 +1,9 @@
+ - ERG-T-01 device defined as /dev/ttyACM0 is a proper ERG-logger device and is now connected
+ - current data acquisition schedule was read successfully
+   final address is: 292fa0
+   there should be 168698 points in the log-file
+   old  START date:  Mon Apr 15 15:30:00 2019
+   old FINISH date:  Thu May 30 15:00:00 2019
+ - filename choosen: /home/zoidberg/Instruments/logger/ERG-T/operation/TEST.log
+   download completed succesfully
+ - the device was disconnected properly
