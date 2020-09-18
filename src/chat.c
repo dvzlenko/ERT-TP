@@ -180,7 +180,7 @@ void vChatTask(void *vpars)
 			cdc_write_buf(&cdc_out, "\r\n", 0, 1);
 			// R for the 2-nd TEMPERATURE sensor
 			for (i = 0; i < sizeof(deviceInfo.R2); i++) {
-				sniprintf(s, sizeof(s), "%c", deviceInfo.R1[i]);
+				sniprintf(s, sizeof(s), "%c", deviceInfo.R2[i]);
 				cdc_write_buf(&cdc_out, s, strlen(s), 1);
 			}
 			cdc_write_buf(&cdc_out, "\r\n", 0, 1);
