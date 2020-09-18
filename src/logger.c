@@ -163,14 +163,15 @@ int GetVoltP(void) {
 
 /* returns corrected time since last calibration in seconds */
 uint32_t GetTime(void) {
-	uint32_t epoch, dT2;
-	float dT1;
+	uint32_t epoch, dT1, dT2;
+	double prescaler;
 
 	RTC_Init();
 	epoch = RTC_GetCounter();
 	ReadTimeSettings();
+	prescaler = timeSettings.prescaler;
 	dT1 = epoch - timeSettings.start;
-	dT2 = dT1*timeSettings.prescaler;
+	dT2 = dT1 * prescaler;
 	return timeSettings.start + dT2;
 }
 
@@ -338,11 +339,13 @@ void MakePressureMeasurement(void) {
 // sets the next wake up time and returns the value of the counter to rise the alarm 
 uint32_t SetWakeUp(void) {
 	uint32_t T_address, P_address, num, T_real_alarm_time, P_real_alarm_time, real_operation_time, stm_operation_time, T_stm_alarm_time, P_stm_alarm_time, stm_time;
+	double prescaler;
 	// reading of the settings
 	ReadProgramSettings();
 	ReadTimeSettings();
 	T_address = GetAddressT();
 	P_address = GetAddressP();
+	prescaler = timeSettings.prescaler;
 	// brick the DEVICE if the schedule is in the past
 	if (GetTime() > loggerSettings.finish)
                 RTC_SetAlarm(0);
@@ -353,7 +356,7 @@ uint32_t SetWakeUp(void) {
 		num = (T_address/16) + GetNumberCorrectionT();
 		T_real_alarm_time = loggerSettings.start + loggerSettings.T_freq*num;
 		real_operation_time = T_real_alarm_time - timeSettings.start;
-		stm_operation_time = real_operation_time/timeSettings.prescaler; 
+		stm_operation_time = real_operation_time / prescaler; 
 		T_stm_alarm_time = timeSettings.start + stm_operation_time - 1;
 		while (T_stm_alarm_time < stm_time + 1) {
 			T_stm_alarm_time += loggerSettings.T_freq;
@@ -363,7 +366,7 @@ uint32_t SetWakeUp(void) {
 		num = (P_address - loggerSettings.P_addr)/8 + GetNumberCorrectionP();
 		P_real_alarm_time = loggerSettings.start + loggerSettings.P_freq*num;
 		real_operation_time = P_real_alarm_time - timeSettings.start;
-		stm_operation_time = real_operation_time/timeSettings.prescaler; 
+		stm_operation_time = real_operation_time / prescaler; 
 		P_stm_alarm_time = timeSettings.start + stm_operation_time - 1;
 		while (P_stm_alarm_time < stm_time + 1) {
 			P_stm_alarm_time += loggerSettings.P_freq;
